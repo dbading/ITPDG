@@ -1,12 +1,12 @@
 # Interaktive Mathematik-Animationen
 
-Eine Sammlung interaktiver Mathematik-Visualisierungen für Studium und Lehre.
+Eine Sammlung interaktiver Mathematik-Visualisierungen.
 
 ## Fourier-Reihe
 
 Mit dem Slider kann die Anzahl der Fourier-Moden von \(N=0\) bis \(N=20\) eingestellt werden. Die ursprüngliche Funktion und die Fourier-Approximation werden gemeinsam dargestellt.
 
-**[Zur interaktiven Animation](fourier_interaktiv.html)**
+**[Zur interaktiven Animation](fourier_interaktiv_step.html)**
 
 ## Verwendung
 
