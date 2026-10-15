@@ -1,31 +1,62 @@
 <!doctype html>
 <html lang="de">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Interaktive Mathematik-Animationen</title>
-<style>
-  * { box-sizing: border-box; }
-  body { margin:0; background:#fafafa; color:#222; font: 17px system-ui, -apple-system, sans-serif; }
-  main { max-width:850px; margin:50px auto; padding:0 20px; }
-  h1 { font-size:clamp(26px,5vw,38px); margin-bottom:8px; }
-  p { line-height:1.6; color:#555; }
-  section { background:white; padding:22px; margin-top:30px; border:1px solid #e5e7eb; border-radius:14px; }
-  h2 { margin-top:0; font-size:23px; }
-  iframe { width:100%; height:570px; border:0; display:block; }
-  a { color:#2563eb; }
-</style>
-</head>
-<body>
-<main>
-  <h1>Interaktive Mathematik-Animationen</h1>
-  <p>Mathematische Zusammenhänge selbst erkunden: Bewege den Slider, um die Fourier-Approximation zu verändern.</p>
-  <section>
-    <h2>Fourier-Reihe</h2>
-    <p>Die Anzahl der Fourier-Moden N lässt sich mit dem Slider einstellen.</p>
-    <iframe src="./fourier_interaktiv_step.html" title="Interaktive Fourier-Approximation" loading="lazy"></iframe>
-    <p><a href="./fourier_interaktiv_step.html">Animation separat öffnen</a></p>
-  </section>
-</main>
-</body>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="description" content="Interaktive Mathematik-Animationen zum selbstständigen Experimentieren.">
+		<title>Startseite | Mathematik interaktiv</title>
+		<link rel="stylesheet" href="styles.css">
+	</head>
+	<body>
+		<header class="nav">
+			<div class="shell">
+				<a class="brand" href="index.html">math<span>.</span>animations</a>
+				<a class="navlink" href="index.html">Startseite ↗</a>
+			</div>
+		</header>
+
+		<main class="shell">
+			<section class="hero">
+				<div class="eyebrow">Interaktive Mathematik</div>
+				<h1>Mathematik wird verständlicher, wenn man sie bewegt.</h1>
+				<p>
+					Entdecke mathematische Ideen durch interaktive Visualisierungen. Wähle ein Gebiet und experimentiere direkt im Browser mit den Parametern.
+				</p>
+			</section>
+
+			<section>
+				<div class="section-header">
+					<h2>Themengebiete</h2>
+					<small>Weitere Animationen folgen</small>
+				</div>
+
+				<div class="grid">
+					<a class="card" href="Faltung">
+						<div class="symbol">∑</div>
+						<h3>Faltung</h3>
+						<p>Faltung von Funktionen und ihre Anwendungen in der Signalverarbeitung.</p>
+						<span class="more">2 Animationen ansehen →</span>
+					</a>
+
+					<a class="card" href="Fourier Reihen/fourier_interaktiv_step.html">
+						<div class="symbol">∑</div>
+						<h3>Fourier-Reihen</h3>
+						<p>Fourier-Reihen, Exponentialfunktionen und Approximationen.</p>
+						<span class="more">Themenbereich öffnen →</span>
+					</a>
+
+					<a class="card" href="Fourier Transformation/">
+						<div class="symbol">∇</div>
+						<h3>Fourier-Transformation</h3>
+						<p>Die Fourier-Transformation und ihre Anwendungen in der Signalverarbeitung.</p>
+						<span class="more">Themenbereich öffnen →</span>
+					</a>
+				</div>
+			</section>
+		</main>
+
+		<footer class="footer">
+			<div class="shell">Mathematik interaktiv · Python-generierte Animationen · GitHub Pages</div>
+		</footer>
+	</body>
 </html>
