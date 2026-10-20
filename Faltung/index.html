@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Interaktive mathematische Visualisierungen zur Faltung und zu B-Splines." />
+  <title>Faltung & B-Splines · Interaktive Mathematik</title>
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(', '\\)'], ['$','$']], displayMath: [['\\[','\\]'], ['$$','$$']] },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'] }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+  <style>
+    :root { color-scheme:light; --ink:#1b293b; --muted:#617083; --accent:#315fd4; --line:#dfe6ee; --bg:#f7f9fc; --panel:#fff; }
+    *,*::before,*::after{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);background:var(--bg);line-height:1.75}
+    a{color:var(--accent)}
+    .shell{width:min(1140px,calc(100% - 48px));margin:auto}
+    header{padding:70px 0 54px;border-bottom:1px solid var(--line);background:linear-gradient(145deg,#ffffff 18%,#eef4ff 100%)}
+    .eyebrow{font-size:.78rem;text-transform:uppercase;letter-spacing:.16em;font-weight:750;color:var(--accent)}
+    h1,h2,h3{line-height:1.18;letter-spacing:-.035em}
+    h1{font-size:clamp(2.4rem,5vw,4.25rem);margin:14px 0 19px;font-weight:780}
+    .intro{max-width:750px;font-size:1.1rem;color:var(--muted);margin:0}
+    .contents{display:flex;gap:10px;flex-wrap:wrap;margin-top:27px}
+    .contents a{font-size:.9rem;text-decoration:none;padding:8px 13px;background:white;border:1px solid var(--line);border-radius:999px;color:var(--ink)}
+    main{padding:52px 0 95px}
+    .lead{max-width:900px;margin-bottom:65px;font-size:1.07rem}
+    .chapter{margin:0 0 100px;scroll-margin-top:28px}
+    .chapter-head{margin-bottom:26px}
+    .chapter-index{display:inline-block;color:var(--accent);font-weight:740;font-size:.81rem;letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px}
+    h2{font-size:clamp(1.85rem,3.5vw,2.5rem);margin:0 0 10px}
+    .chapter-head>p{color:var(--muted);margin:0;max-width:820px}
+    .split{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:30px;align-items:start}
+    .split.reverse{grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr)}
+    .split.reverse .copy{order:2}
+    .copy{padding:12px 8px 10px 0;font-size:1rem}
+    .copy p:first-child{margin-top:0}
+    .copy h3{font-size:1.13rem;margin:0 0 15px}
+    .copy p{margin:0 0 17px}
+    .math-note{margin:22px 0;padding:14px 17px;border-left:3px solid var(--accent);background:#edf3ff;border-radius:0 10px 10px 0;overflow-x:auto}
+    .embed{background:var(--panel);border:1px solid var(--line);border-radius:18px;box-shadow:0 12px 40px rgba(36,52,73,.055);overflow:hidden;min-width:0}
+    .embed-bar{display:flex;gap:12px;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid var(--line)}
+    .embed-title{font-weight:700;font-size:.9rem}
+    .embed-bar a{white-space:nowrap;text-decoration:none;font-size:.82rem;font-weight:650}
+    iframe{display:block;border:0;width:100%;height:650px;background:#fff}
+    .embed-foot{padding:10px 18px;color:var(--muted);font-size:.79rem;border-top:1px solid var(--line)}
+    .between{border-top:1px solid var(--line);margin:45px 0 0;padding-top:24px;color:var(--muted);max-width:950px}
+    .ending{padding:30px 0;border-top:1px solid var(--line);color:var(--muted)}
+    footer{border-top:1px solid var(--line);padding:24px 0 35px;color:var(--muted);font-size:.85rem}
+    @media(max-width:850px){.split,.split.reverse{grid-template-columns:1fr;gap:16px}.split.reverse .copy{order:0}.copy{padding:0}.chapter{margin-bottom:72px}iframe{height:570px}}
+    @media(max-width:520px){.shell{width:min(100% - 28px,1140px)}header{padding:45px 0 38px}main{padding-top:34px}.contents{gap:7px}.contents a{font-size:.8rem}iframe{height:530px}.embed-bar{padding:12px}.embed-foot{padding:8px 12px}}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="shell">
+      <div class="eyebrow">Interaktive Mathematik</div>
+      <h1>Faltung &amp; B-Splines</h1>
+      <p class="intro">Eine visuelle Einführung in die Faltung von Funktionen. Verschiebe die Funktionen in den interaktiven Animationen und beobachte, wie neue B-Splines entstehen.</p>
+      <nav class="contents" aria-label="Abschnitte">
+        <a href="#faltung_interaktiv_M1">01 · \(M_1*M_1\)</a>
+        <a href="#faltung_interaktiv_M2">02 · \(M_1*M_2\)</a>
+        <a href="#faltung_interaktiv_M3">03 · \(M_1*M_3\)</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="lead" aria-label="Einführung">
+      <p>Die <strong>Faltung</strong> ist eine Operation, die zwei Funktionen zu einer neuen Funktion kombiniert. Für geeignete Funktionen \(f\) und \(g\) ist sie definiert als</p>
+      <div class="math-note">\[ (f*g)(x)=\int_{\mathbb R} f(t)\,g(x-t)\,\mathrm dt. \]</div>
+      <p>Im Folgenden lässt sich dieser Vorgang an drei Beispielen Schritt für Schritt untersuchen. Die Erklärtexte sind Platzhalter und können direkt im HTML bearbeitet werden.</p>
+    </section>
+
+    <!-- ABSCHNITT 1: Text links, Animation rechts -->
+    <section class="chapter" id="faltung_interaktiv_M1">
+      <div class="chapter-head">
+        <span class="chapter-index">Beispiel 01</span>
+        <h2>Die erste Faltung</h2>
+        <p>Von der Hutfunktion zum nächsten B-Spline.</p>
+      </div>
+      <div class="split">
+        <article class="copy">
+          <h3>\(M_1*M_1=M_2\)</h3>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Hier kannst du später deine mathematische Erklärung zur Faltung von \(M_1\) mit sich selbst einfügen.</p>
+          <div class="math-note">\[ M_1(x)=\max(1-|x|,0) \]</div>
+          <p>Wenn du den Regler verschiebst, verändert sich die Überlappung beider Funktionen. Die entstehende Fläche bestimmt den Wert der Faltung an der jeweiligen Position.</p>
+        </article>
+        <div class="embed">
+          <div class="embed-bar"><span class="embed-title">Animation 1 · \(M_1*M_1\)</span><a href="animation_1.html" target="_blank" rel="noopener">Groß öffnen ↗</a></div>
+          <iframe src="faltung_interaktiv_M1.html" title="Interaktive Faltung von M1 mit M1" loading="lazy" allowfullscreen></iframe>
+          <div class="embed-foot">Den Slider in der Animation bewegen, um die Verschiebung zu steuern.</div>
+        </div>
+      </div>
+      <p class="between">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Hier ist Platz für eine weiterführende Beobachtung, einen kleinen Beweis oder eine Überleitung zur nächsten Animation.</p>
+    </section>
+
+    <!-- ABSCHNITT 2: Animation links, Text rechts -->
+    <section class="chapter" id="faltung_interaktiv_M2">
+      <div class="chapter-head">
+        <span class="chapter-index">Beispiel 02</span>
+        <h2>Die Faltung fortsetzen</h2>
+        <p>Eine weitere Faltung erhöht den Grad der Glattheit.</p>
+      </div>
+      <div class="split reverse">
+        <article class="copy">
+          <h3>\(M_1*M_2=M_3\)</h3>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In diesem Bereich kannst du Eigenschaften von \(M_2\) und den nächsten Faltungsschritt erläutern.</p>
+          <div class="math-note">\[ M_3(x)=\int_{\mathbb R} M_1(t)M_2(x-t)\,\mathrm dt \]</div>
+          <p>Hier ist außerdem Platz für deine Interpretation der Kurven und des Zusammenhangs zwischen Faltung, Träger und Regularität.</p>
+        </article>
+        <div class="embed">
+          <div class="embed-bar"><span class="embed-title">Animation 2 · \(M_1*M_2\)</span><a href="animation_2.html" target="_blank" rel="noopener">Groß öffnen ↗</a></div>
+          <iframe src="faltung_interaktiv_M2.html" title="Interaktive Faltung von M1 mit M2" loading="lazy" allowfullscreen></iframe>
+          <div class="embed-foot">Die Animation bleibt unabhängig von den anderen interaktiv.</div>
+        </div>
+      </div>
+      <p class="between">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ergänze an dieser Stelle deine Erkenntnisse oder eine erläuternde mathematische Formel: \(M_{k+1}=M_1*M_k\).</p>
+    </section>
+
+    <!-- ABSCHNITT 3: Text links, Animation rechts -->
+    <section class="chapter" id="animation-3">
+      <div class="chapter-head">
+        <span class="chapter-index">Beispiel 03</span>
+        <h2>Der nächste B-Spline</h2>
+        <p>Das rekursive Prinzip wird ein drittes Mal sichtbar.</p>
+      </div>
+      <div class="split">
+        <article class="copy">
+          <h3>\(M_1*M_3=M_4\)</h3>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Hier kannst du die dritte Animation einordnen und die wesentlichen Beobachtungen zusammenfassen.</p>
+          <div class="math-note">\[ M_4(x)=\int_{\mathbb R} M_1(t)M_3(x-t)\,\mathrm dt \]</div>
+          <p>Du kannst beliebig viele weitere Absätze, Gleichungen, Definitionen oder Beweise ergänzen. Der Bereich wächst automatisch mit deinem Text.</p>
+        </article>
+        <div class="embed">
+          <div class="embed-bar"><span class="embed-title">Animation 3 · \(M_1*M_3\)</span><a href="faltung_interaktiv_M3.html" target="_blank" rel="noopener">Groß öffnen ↗</a></div>
+          <iframe src="faltung_interaktiv_M3.html" title="Interaktive Faltung von M1 mit M3" loading="lazy" allowfullscreen></iframe>
+          <div class="embed-foot">Eigene HTML-Animation: faltung_interaktiv_M3.html</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="ending">
+      <h2>Zusammenfassung</h2>
+      <p>Die Folge der Faltungen kann rekursiv durch \(M_{k+1}=M_1*M_k\) beschrieben werden. Diesen Abschnitt kannst du später durch ein ausführliches Fazit ersetzen.</p>
+      <!-- WEITERE ANIMATIONEN:
+        Kopiere einen vollständigen <section class="chapter">...</section>-Block,
+        ändere id, Überschrift und beide Verweise auf die HTML-Datei.
+        Die abwechselnde Anordnung steuerst du mit der Klasse "split reverse".
+      -->
+    </section>
+  </main>
+  <footer><div class="shell">Interaktive Mathematik · Faltung und B-Splines</div></footer>
+</body>
+</html>
