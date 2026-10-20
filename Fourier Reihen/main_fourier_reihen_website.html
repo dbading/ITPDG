@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Interaktive Visualisierungen der Fourier-Reihe und ihrer Approximation verschiedener Funktionen." />
+  <title>Fourier-Reihen · Interaktive Mathematik</title>
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(', '\\)'], ['$','$']], displayMath: [['\\[','\\]'], ['$$','$$']] },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'] }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+  <style>
+    :root { color-scheme:light; --ink:#1b293b; --muted:#617083; --accent:#315fd4; --line:#dfe6ee; --bg:#f7f9fc; --panel:#fff; }
+    *,*::before,*::after{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);background:var(--bg);line-height:1.75}
+    a{color:var(--accent)}
+    .shell{width:min(1140px,calc(100% - 48px));margin:auto}
+    header{padding:70px 0 54px;border-bottom:1px solid var(--line);background:linear-gradient(145deg,#ffffff 18%,#eef4ff 100%)}
+    .eyebrow{font-size:.78rem;text-transform:uppercase;letter-spacing:.16em;font-weight:750;color:var(--accent)}
+    h1,h2,h3{line-height:1.18;letter-spacing:-.035em}
+    h1{font-size:clamp(2.4rem,5vw,4.25rem);margin:14px 0 19px;font-weight:780}
+    .intro{max-width:750px;font-size:1.1rem;color:var(--muted);margin:0}
+    .contents{display:flex;gap:10px;flex-wrap:wrap;margin-top:27px}
+    .contents a{font-size:.9rem;text-decoration:none;padding:8px 13px;background:white;border:1px solid var(--line);border-radius:999px;color:var(--ink)}
+    main{padding:52px 0 95px}
+    .lead{max-width:900px;margin-bottom:65px;font-size:1.07rem}
+    .chapter{margin:0 0 100px;scroll-margin-top:28px}
+    .chapter-head{margin-bottom:26px}
+    .chapter-index{display:inline-block;color:var(--accent);font-weight:740;font-size:.81rem;letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px}
+    h2{font-size:clamp(1.85rem,3.5vw,2.5rem);margin:0 0 10px}
+    .chapter-head>p{color:var(--muted);margin:0;max-width:820px}
+    .split{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:30px;align-items:start}
+    .split.reverse{grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr)}
+    .split.reverse .copy{order:2}
+    .copy{padding:12px 8px 10px 0;font-size:1rem}
+    .copy p:first-child{margin-top:0}
+    .copy h3{font-size:1.13rem;margin:0 0 15px}
+    .copy p{margin:0 0 17px}
+    .math-note{margin:22px 0;padding:14px 17px;border-left:3px solid var(--accent);background:#edf3ff;border-radius:0 10px 10px 0;overflow-x:auto}
+    .embed{background:var(--panel);border:1px solid var(--line);border-radius:18px;box-shadow:0 12px 40px rgba(36,52,73,.055);overflow:hidden;min-width:0}
+    .embed-bar{display:flex;gap:12px;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid var(--line)}
+    .embed-title{font-weight:700;font-size:.9rem}
+    .embed-bar a{white-space:nowrap;text-decoration:none;font-size:.82rem;font-weight:650}
+    iframe{display:block;border:0;width:100%;height:650px;background:#fff}
+    .embed-foot{padding:10px 18px;color:var(--muted);font-size:.79rem;border-top:1px solid var(--line)}
+    .between{border-top:1px solid var(--line);margin:45px 0 0;padding-top:24px;color:var(--muted);max-width:950px}
+    .ending{padding:30px 0;border-top:1px solid var(--line);color:var(--muted)}
+    footer{border-top:1px solid var(--line);padding:24px 0 35px;color:var(--muted);font-size:.85rem}
+    @media(max-width:850px){.split,.split.reverse{grid-template-columns:1fr;gap:16px}.split.reverse .copy{order:0}.copy{padding:0}.chapter{margin-bottom:72px}iframe{height:570px}}
+    @media(max-width:520px){.shell{width:min(100% - 28px,1140px)}header{padding:45px 0 38px}main{padding-top:34px}.contents{gap:7px}.contents a{font-size:.8rem}iframe{height:530px}.embed-bar{padding:12px}.embed-foot{padding:8px 12px}}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="shell">
+      <div class="eyebrow">Interaktive Mathematik · Analysis</div>
+      <h1>Fourier-Reihen &amp; Approximation</h1>
+      <p class="intro">Wie lässt sich eine Funktion durch Sinus- und Kosinuswellen darstellen? Drei interaktive Beispiele zeigen, wie Fourier-Partialsummen entstehen, wo die Approximation gelingt und an welchen Stellen überraschende Effekte auftreten.</p>
+      <nav class="contents" aria-label="Abschnitte">
+        <a href="#fourier_interaktiv_identity">01 · Identitätsfunktion</a>
+        <a href="#fourier_interaktiv_step">02 · Heaviside-Funktion</a>
+        <a href="#fourier_interaktiv_sin">03 · Sinusfunktion</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="lead" aria-label="Einführung">
+      <h2>Was ist eine Fourier-Reihe?</h2>
+      <p>Die Grundidee der <strong>Fourier-Analysis</strong> besteht darin, periodische Funktionen als Überlagerung einfacher harmonischer Schwingungen zu beschreiben. Unter geeigneten Voraussetzungen kann eine Funktion auf einem Intervall der Länge \(2L\) durch eine Reihe aus Kosinus- und Sinustermen dargestellt werden:</p>
+      <div class="math-note">\[
+        f(x)\sim \frac{a_0}{2}+\sum_{n=1}^{\infty}
+        \left(a_n\cos\frac{n\pi x}{L}+b_n\sin\frac{n\pi x}{L}\right).
+      \]</div>
+      <p>Die Koeffizienten geben an, wie stark die einzelnen Frequenzen vertreten sind. Für eine integrierbare Funktion auf \([-L,L]\) lauten sie:</p>
+      <div class="math-note">\[
+        a_n=\frac1L\int_{-L}^{L}f(x)\cos\frac{n\pi x}{L}\,\mathrm dx,
+        \qquad
+        b_n=\frac1L\int_{-L}^{L}f(x)\sin\frac{n\pi x}{L}\,\mathrm dx.
+      \]</div>
+      <p>In den Animationen betrachten wir die <strong>Partialsummen</strong> \(S_N\), also die Näherung mit nur den ersten \(N\) Frequenzen. Mit dem Slider lässt sich die Anzahl dieser Terme verändern. Je größer \(N\), desto mehr Details kann die Näherung erfassen. Wie gut das funktioniert, hängt jedoch wesentlich von der Funktion ab.</p>
+    </section>
+
+    <!-- ABSCHNITT 1: Text links, Animation rechts -->
+    <section class="chapter" id="fourier_interaktiv_identity">
+      <div class="chapter-head">
+        <span class="chapter-index">Beispiel 01</span>
+        <h2>Die Identitätsfunktion</h2>
+        <p>Eine einfache Gerade wird durch eine Summe periodischer Schwingungen angenähert.</p>
+      </div>
+      <div class="split">
+        <article class="copy">
+          <h3>\(f(x)=x\)</h3>
+          <p>Die Identitätsfunktion ist auf \((-L,L)\) glatt und ungerade. Deshalb verschwinden ihre Kosinuskoeffizienten \(a_n\), und die Fourier-Reihe besteht nur aus Sinustermen.</p>
+          <div class="math-note">\[
+            x=\frac{2L}{\pi}\sum_{n=1}^{\infty}
+            \frac{(-1)^{n+1}}{n}\sin\left(\frac{n\pi x}{L}\right),
+            \quad -L&lt;x&lt;L.
+          \]</div>
+          <p>Erhöhe \(N\) und beobachte, wie sich die Schwingungen im Inneren des Intervalls der Geraden annähern. An den Rändern entsteht hingegen ein Sprung in der <em>periodischen Fortsetzung</em>: Die Fourier-Reihe nimmt dort den Mittelwert der beiden einseitigen Grenzwerte an.</p>
+        </article>
+        <div class="embed">
+          <div class="embed-bar"><span class="embed-title">Animation 1 · Identitätsfunktion</span><a href="animation_1.html" target="_blank" rel="noopener">Groß öffnen ↗</a></div>
+          <iframe src="fourier_interaktiv_identity.html" title="Fourier-Approximation der Identitätsfunktion" loading="lazy" allowfullscreen></iframe>
+          <div class="embed-foot">Mit dem Slider die Anzahl der Fourier-Terme \(N\) verändern.</div>
+        </div>
+      </div>
+      <p class="between">Wichtig ist die Unterscheidung zwischen der ursprünglichen Funktion auf einem Intervall und ihrer periodischen Fortsetzung. Eine Funktion kann im Inneren stetig sein und dennoch an den Periodengrenzen einen Sprung aufweisen.</p>
+    </section>
+
+    <!-- ABSCHNITT 2: Animation links, Text rechts -->
+    <section class="chapter" id="fourier_interaktiv_step">
+      <div class="chapter-head">
+        <span class="chapter-index">Beispiel 02</span>
+        <h2>Die Heaviside-Funktion</h2>
+        <p>Eine Sprungstelle macht sichtbar, wo die Fourier-Approximation an ihre Grenzen stößt.</p>
+      </div>
+      <div class="split reverse">
+        <article class="copy">
+          <h3>Eine unstetige Funktion</h3>
+          <p>Die Heaviside-Funktion springt bei \(x=0\) von null auf eins. Ihr Wert genau an der Sprungstelle lässt sich unterschiedlich festlegen; für die Fourier-Koeffizienten spielt dieser einzelne Funktionswert keine Rolle.</p>
+          <div class="math-note">\[
+            H(x)=\begin{cases}
+              0,&amp;x&lt;0,\\
+              1,&amp;x&gt;0.
+            \end{cases}
+          \]</div>
+          <p>Mit wachsendem \(N\) nähert sich die Fourier-Partialsumme links und rechts des Sprungs den jeweiligen Funktionswerten. Direkt an der Sprungstelle konvergiert sie zum Mittelwert \(\tfrac12\).</p>
+          <p>Besonders interessant ist das <strong>Gibbs-Phänomen</strong>: In der Nähe des Sprungs treten Über- und Unterschwinger auf. Sie werden mit zunehmendem \(N\) schmaler, ihre maximale relative Höhe verschwindet aber nicht.</p>
+        </article>
+        <div class="embed">
+          <div class="embed-bar"><span class="embed-title">Animation 2 · Heaviside-Funktion</span><a href="animation_2.html" target="_blank" rel="noopener">Groß öffnen ↗</a></div>
+          <iframe src="fourier_interaktiv_step.html" title="Fourier-Approximation der Heaviside-Funktion" loading="lazy" allowfullscreen></iframe>
+          <div class="embed-foot">Achte beim Vergrößern von \(N\) besonders auf die Umgebung der Sprungstelle.</div>
+        </div>
+      </div>
+      <p class="between">Für stückweise glatte, periodisch fortgesetzte Funktionen konvergiert die Fourier-Reihe an einer Sprungstelle \(x_0\) gegen \(\tfrac12\bigl(f(x_0^-)+f(x_0^+)\bigr)\). Die sichtbaren Überschwinger widersprechen dieser punktweisen Konvergenz nicht.</p>
+    </section>
+
+    <!-- ABSCHNITT 3: Text links, Animation rechts -->
+    <section class="chapter" id="fourier_interaktiv_sin">
+      <div class="chapter-head">
+        <span class="chapter-index">Beispiel 03</span>
+        <h2>Die Sinusfunktion</h2>
+        <p>Eine harmonische Schwingung ist bereits ein Baustein der Fourier-Reihe.</p>
+      </div>
+      <div class="split">
+        <article class="copy">
+          <h3>\(f(x)=\sin(x)\)</h3>
+          <p>Die Sinusfunktion ist ein besonders anschauliches Beispiel: Auf \([-\pi,\pi]\) mit der üblichen \(2\pi\)-periodischen Fortsetzung besteht ihre Fourier-Reihe aus genau einem nichtverschwindenden Term.</p>
+          <div class="math-note">\[
+            f(x)=\sin(x),\qquad b_1=1,\quad
+            a_n=0,\quad b_n=0\ \text{für }n\ne1.
+          \]</div>
+          <p>Schon die erste Fourier-Partialsumme \(S_1\) liefert in diesem Fall die exakte Funktion. Zusätzliche Frequenzen ändern nichts mehr. So wird deutlich: Eine Fourier-Reihe ist nicht zwangsläufig eine unendliche Summe mit unendlich vielen von null verschiedenen Koeffizienten.</p>
+          <p><em>Hinweis:</em> Wird die Sinusfunktion auf einem anderen Intervall periodisch fortgesetzt, kann ihre Fourier-Darstellung anders aussehen.</p>
+        </article>
+        <div class="embed">
+          <div class="embed-bar"><span class="embed-title">Animation 3 · Sinusfunktion</span><a href="fourier_interaktiv_sin.html" target="_blank" rel="noopener">Groß öffnen ↗</a></div>
+          <iframe src="fourier_interaktiv_sin.html" title="Fourier-Approximation der Sinusfunktion" loading="lazy" allowfullscreen></iframe>
+          <div class="embed-foot">Vergleiche, ab welchem \(N\) die Approximation mit der Ausgangsfunktion übereinstimmt.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="ending">
+      <h2>Was zeigen die drei Beispiele?</h2>
+      <p>Die Qualität der Fourier-Approximation hängt nicht allein von der Anzahl \(N\) der Summanden ab, sondern auch von der <strong>Regularität</strong> der Funktion und davon, wie sie periodisch fortgesetzt wird. Eine passende einzelne Schwingung lässt sich exakt darstellen, eine Gerade erzeugt an den Periodengrenzen Sprünge und eine echte Sprungfunktion zeigt das Gibbs-Phänomen.</p>
+      <p>Fourier-Reihen sind damit mehr als eine Methode zur Kurvenannäherung: Sie zerlegen Funktionen in Frequenzanteile und bilden eine Grundlage für Signalverarbeitung, partielle Differentialgleichungen und numerische Analysis.</p>
+      <!-- WEITERE ANIMATIONEN: Einen vollständigen chapter-Block kopieren. -->
+    </section>
+  </main>
+  <footer><div class="shell">Interaktive Mathematik · Fourier-Reihen</div></footer>
+</body>
+</html>
