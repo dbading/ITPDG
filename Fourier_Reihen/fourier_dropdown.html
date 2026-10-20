@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Interaktive Fourier-Approximation mit auswählbarer Funktion.">
+  <title>Fourier-Reihen · Interaktive Approximation</title>
+  <style>
+    :root { --ink:#1b293b;--muted:#617083;--accent:#315fd4;--line:#dfe6ee;--bg:#f7f9fc;--panel:#fff; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; color:var(--ink); background:var(--bg); line-height:1.6; }
+    .shell { width:min(1200px,calc(100% - 40px)); margin:0 auto; }
+    header { padding:46px 0 30px; }
+    .eyebrow { font-size:.76rem; font-weight:750; text-transform:uppercase; letter-spacing:.13em; color:var(--accent); }
+    h1 { margin:10px 0; font-size:clamp(1.8rem,4vw,2.9rem); line-height:1.15; }
+    .intro { color:var(--muted); max-width:780px; margin:0; }
+    .layout { display:grid; grid-template-columns:minmax(0,1fr) 245px; align-items:start; gap:22px; padding-bottom:60px; }
+    .animation-card,.sidebar { background:var(--panel); border:1px solid var(--line); border-radius:18px; box-shadow:0 12px 40px rgba(36,52,73,.055); }
+    .animation-card { overflow:hidden; min-width:0; }
+    .card-bar { padding:16px 20px; display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px; border-bottom:1px solid var(--line); }
+    .card-bar strong { font-size:1rem; }
+    .card-bar a { color:var(--accent); font-size:.86rem; font-weight:650; text-decoration:none; }
+    iframe { display:block; width:100%; height:610px; border:0; background:white; }
+    .card-foot { padding:11px 20px; border-top:1px solid var(--line); color:var(--muted); font-size:.83rem; }
+    .sidebar { padding:22px; }
+    label { font-size:.88rem; font-weight:700; display:block; margin-bottom:10px; }
+    select { width:100%; padding:12px 35px 12px 12px; border:1px solid #cbd5e1; border-radius:10px; background:#fff; color:var(--ink); font:inherit; cursor:pointer; }
+    select:focus-visible { outline:3px solid #c7d7ff; border-color:var(--accent); }
+    .hint { color:var(--muted); font-size:.85rem; margin:16px 0 0; }
+    .formula { font-size:.94rem; padding:14px 0 0; margin:16px 0 0; border-top:1px solid var(--line); }
+    code { font-size:.85em; }
+    @media (max-width:850px) { .layout { grid-template-columns:1fr; } .sidebar { grid-row:1; } iframe { height:570px; } }
+    @media (max-width:520px) { .shell { width:calc(100% - 24px); } header { padding-top:28px; } iframe { height:510px; } .sidebar { padding:16px; } }
+  </style>
+</head>
+<body>
+  <header class="shell">
+    <div class="eyebrow">Interaktive Mathematik</div>
+    <h1>Fourier-Reihen visualisieren</h1>
+    <p class="intro">Wähle eine Funktion und steuere in der Animation mit dem Slider die Anzahl der Summanden ihrer Fourier-Approximation.</p>
+  </header>
+  <main class="shell layout">
+    <section class="animation-card" aria-label="Fourier-Animation">
+      <div class="card-bar">
+        <strong id="animationTitle">Identitätsfunktion</strong>
+        <a id="openLink" href="fourier_interaktiv_identity.html" target="_blank" rel="noopener">Groß öffnen ↗</a>
+      </div>
+      <iframe id="animationFrame" title="Interaktive Fourier-Approximation der Identitätsfunktion" src="fourier_interaktiv_identity.html" loading="eager"></iframe>
+      <div class="card-foot">Der Slider befindet sich innerhalb der ausgewählten Animation.</div>
+    </section>
+    <aside class="sidebar">
+      <label for="functionSelect">Funktion auswählen</label>
+      <select id="functionSelect">
+        <option value="identity">Identität</option>
+        <option value="step">Heaviside-Funktion</option>
+        <option value="sin">Sinusfunktion</option>
+      </select>
+      <p class="hint" id="description">Die Fourier-Reihe approximiert die periodische Fortsetzung der Identitätsfunktion.</p>
+      <p class="formula" id="formula">f(x) = x</p>
+    </aside>
+  </main>
+  <script>
+    // Hier die Dateinamen anpassen, falls du sie später umbenennst.
+    const animations = {
+      identity: {
+        file: 'fourier_interaktiv_identity.html',
+        title: 'Identitätsfunktion',
+        description: 'Die Fourier-Reihe approximiert die periodische Fortsetzung der Identitätsfunktion.',
+        formula: 'f(x) = x'
+      },
+      step: {
+        file: 'fourier_interaktiv_step.html',
+        title: 'Heaviside-Funktion',
+        description: 'An der Sprungstelle lässt sich das Gibbs-Phänomen beobachten.',
+        formula: 'H(x) = 0 (x < 0), 1 (x ≥ 0)'
+      },
+      sin: {
+        file: 'fourier_interaktiv_sin.html',
+        title: 'Sinusfunktion',
+        description: 'Eine Sinusschwingung ist bereits eine Fourier-Basisfunktion (bei passender Periodenwahl).',
+        formula: 'f(x) = sin(x)'
+      }
+    };
+    const selector = document.getElementById('functionSelect');
+    const frame = document.getElementById('animationFrame');
+    const title = document.getElementById('animationTitle');
+    const link = document.getElementById('openLink');
+    const description = document.getElementById('description');
+    const formula = document.getElementById('formula');
+    selector.addEventListener('change', () => {
+      const item = animations[selector.value];
+      frame.src = item.file;
+      frame.title = 'Interaktive Fourier-Approximation: ' + item.title;
+      title.textContent = item.title;
+      link.href = item.file;
+      description.textContent = item.description;
+      formula.textContent = item.formula;
+    });
+  </script>
+</body>
+</html>
